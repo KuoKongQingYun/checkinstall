@@ -98,9 +98,9 @@ static int (*true_rename)(const char *, const char *);
 static int (*true_rmdir)(const char *);
 static int (*true_xstat)(int,const char *,struct stat *);
 static int (*true_lxstat)(int,const char *,struct stat *);
-static int (*true_scandir)(	const char *,struct dirent ***,
+static int (*true_scandir)( const char *,struct dirent ***,
 				int (*)(const struct dirent *),
-				int (*)(const void *,const void *));
+				int (*)(const struct dirent **,const struct dirent **));
 static int (*true_symlink)(const char *, const char *);
 static int (*true_truncate)(const char *, TRUNCATE_T);
 static int (*true_unlink)(const char *);
@@ -118,9 +118,9 @@ static FILE *(*true_fopen64)(const char *,const char *);
 static int (*true_ftruncate64)(int, __off64_t);
 static int (*true_open64)(const char *, int, ...);
 static struct dirent64 *(*true_readdir64)(DIR *dir);
-static int (*true_scandir64)(	const char *,struct dirent64 ***,
+static int (*true_scandir64)( const char *,struct dirent64 ***,
 				int (*)(const struct dirent64 *),
-				int (*)(const void *,const void *));
+				int (*)(const struct dirent64 **,const struct dirent64 **));
 static int (*true_xstat64)(int,const char *, struct stat64 *);
 static int (*true_lxstat64)(int,const char *, struct stat64 *);
 static int (*true_truncate64)(const char *, __off64_t);
@@ -2938,7 +2938,7 @@ struct dirent *readdir(DIR *dir) {
 	return result;
 }
 
-#if (GLIBC_MINOR <= 4)
+#if (0)
 int readlink(const char *path,char *buf,size_t bufsiz) {
 	int result;
 #else
@@ -3077,9 +3077,9 @@ int rmdir(const char *pathname) {
 	return result;
 }
 
-int scandir(	const char *dir,struct dirent ***namelist,
+int scandir( const char *dir,struct dirent ***namelist,
 		int (*select)(const struct dirent *),
-		int (*compar)(const void *,const void *)	) {
+		int (*compar)(const struct dirent **,const struct dirent **) ) {
 	int result;
 
 	if (!libc_handle)
@@ -3689,9 +3689,9 @@ struct dirent64 *readdir64(DIR *dir) {
 	return result;
 }
 
-int scandir64(	const char *dir,struct dirent64 ***namelist,
+int scandir64( const char *dir,struct dirent64 ***namelist,
 		int (*select)(const struct dirent64 *),
-		int (*compar)(const void *,const void *)	) {
+		int (*compar)(const struct dirent64 **,const struct dirent64 **) ) {
 	int result;
 
 	if (!libc_handle)
